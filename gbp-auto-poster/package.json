@@ -1,0 +1,36 @@
+{
+  "name": "gbp-auto-poster",
+  "version": "1.0.0",
+  "description": "Automated Google Business Profile posting using Playwright",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "post:once": "ts-node src/run-once.ts",
+    "install:browsers": "npx playwright install chromium"
+  },
+  "keywords": [
+    "google-business-profile",
+    "automation",
+    "playwright",
+    "scheduler"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.3",
+    "playwright": "^1.40.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@types/node-cron": "^3.0.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
