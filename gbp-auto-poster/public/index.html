@@ -3,169 +3,252 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GBP Multi-Poster Dashboard</title>
+  <title>Agency Hub - GBP Automation</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
   <div class="app">
-    <!-- Sidebar - Business List -->
+    <!-- Sidebar -->
     <aside class="sidebar">
-      <div class="sidebar-header">
-        <h1>GBP Poster</h1>
-        <p class="subtitle">Multi-Business Dashboard</p>
+      <div class="sidebar-logo">
+        <h1>Agency Hub</h1>
       </div>
 
-      <!-- Global Stats -->
-      <div class="global-stats">
-        <div class="stat-mini">
-          <span class="stat-value" id="globalTotal">0</span>
-          <span class="stat-label">Businesses</span>
-        </div>
-        <div class="stat-mini">
-          <span class="stat-value" id="globalActive">0</span>
-          <span class="stat-label">Scheduled</span>
-        </div>
-        <div class="stat-mini">
-          <span class="stat-value" id="globalPosts">0</span>
-          <span class="stat-label">Posts</span>
-        </div>
-      </div>
-
-      <!-- Business List -->
-      <div class="business-list" id="businessList">
-        <p class="loading">Loading businesses...</p>
-      </div>
-
-      <!-- Activity Log -->
-      <div class="activity-section">
-        <h3>Activity Log</h3>
-        <div class="log-list" id="logList">
-          <p class="log-entry info">Dashboard connected</p>
-        </div>
-      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item" data-page="dashboard">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-page="tasks">
+          <span class="nav-icon">☑️</span>
+          <span>Tasks</span>
+        </a>
+        <a href="#" class="nav-item" data-page="kanban">
+          <span class="nav-icon">📋</span>
+          <span>Kanban Board</span>
+        </a>
+        <a href="#" class="nav-item" data-page="time">
+          <span class="nav-icon">⏱️</span>
+          <span>Time Tracking</span>
+        </a>
+        <a href="#" class="nav-item active" data-page="clients">
+          <span class="nav-icon">👥</span>
+          <span>Clients</span>
+        </a>
+        <a href="#" class="nav-item" data-page="gbp">
+          <span class="nav-icon">⭐</span>
+          <span>GBP Automation</span>
+        </a>
+      </nav>
     </aside>
 
-    <!-- Main Content - Business Detail -->
-    <main class="main-content" id="mainContent">
-      <!-- Placeholder when no business selected -->
-      <div class="placeholder" id="placeholder">
-        <div class="placeholder-icon">📍</div>
-        <h2>Select a Business</h2>
-        <p>Choose a business from the sidebar to view details, schedule posts, or post manually.</p>
-      </div>
-
-      <!-- Business Detail View (hidden initially) -->
-      <div class="business-detail hidden" id="businessDetail">
-        <!-- Header -->
-        <div class="detail-header">
-          <button class="btn-back" onclick="deselectBusiness()">← Back</button>
-          <div class="detail-title">
-            <h2 id="detailName">Business Name</h2>
-            <span class="status-badge" id="detailSchedulerBadge">Stopped</span>
-          </div>
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Clients Page -->
+      <div class="page active" id="page-clients">
+        <div class="page-header">
+          <h2>Clients</h2>
+          <button class="btn btn-primary" onclick="showAddClientModal()">+ New Client</button>
         </div>
 
-        <!-- Status Cards -->
-        <div class="detail-cards">
-          <!-- Scheduler Card -->
+        <div class="clients-grid" id="clientsGrid">
+          <!-- Client cards will be rendered here -->
+        </div>
+      </div>
+
+      <!-- GBP Automation Page -->
+      <div class="page" id="page-gbp">
+        <div class="page-header">
+          <h2>GBP Automation</h2>
+        </div>
+
+        <!-- GBP Client Detail (hidden initially) -->
+        <div class="gbp-placeholder" id="gbpPlaceholder">
+          <div class="placeholder-icon">⭐</div>
+          <h3>Select a Client</h3>
+          <p>Go to Clients and click on a client with GBP Enabled to manage their posts.</p>
+        </div>
+
+        <div class="gbp-detail hidden" id="gbpDetail">
+          <div class="gbp-header">
+            <button class="btn-back" onclick="closeGbpDetail()">← Back to Clients</button>
+            <h3 id="gbpClientName">Client Name</h3>
+            <span class="status-badge" id="gbpSchedulerBadge">Not Scheduled</span>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <span class="stat-value" id="gbpTotalPosts">0</span>
+              <span class="stat-label">Total Posts</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value success" id="gbpSuccessPosts">0</span>
+              <span class="stat-label">Successful</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value danger" id="gbpFailedPosts">0</span>
+              <span class="stat-label">Failed</span>
+            </div>
+            <div class="stat-card">
+              <span class="stat-value" id="gbpSuccessRate">0%</span>
+              <span class="stat-label">Success Rate</span>
+            </div>
+          </div>
+
+          <!-- Scheduler Section -->
           <div class="card">
             <div class="card-header">
-              <h3>Scheduler</h3>
+              <h4>Daily Posting Schedule</h4>
               <span class="posting-indicator hidden" id="postingIndicator">Posting...</span>
             </div>
             <div class="card-body">
-              <div class="info-row">
-                <span class="label">Schedule:</span>
-                <span id="detailCron">--</span>
-              </div>
-              <div class="info-row">
-                <span class="label">Timezone:</span>
-                <span id="detailTimezone">--</span>
-              </div>
-              <div class="info-row">
-                <span class="label">Next Post:</span>
-                <span id="detailNextRun">--</span>
+              <div class="schedule-info">
+                <div class="info-row">
+                  <span class="label">Schedule:</span>
+                  <span id="gbpCron">9:00 AM daily</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Timezone:</span>
+                  <span id="gbpTimezone">America/Chicago</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Next Post:</span>
+                  <span id="gbpNextRun">--</span>
+                </div>
               </div>
               <div class="button-row">
                 <button class="btn btn-success" id="startSchedulerBtn" onclick="startScheduler()">Start Daily Posts</button>
-                <button class="btn btn-danger" id="stopSchedulerBtn" onclick="stopScheduler()">Stop</button>
+                <button class="btn btn-danger" id="stopSchedulerBtn" onclick="stopScheduler()" disabled>Stop Schedule</button>
               </div>
             </div>
           </div>
 
-          <!-- Stats Card -->
+          <!-- Manual Post Section -->
           <div class="card">
             <div class="card-header">
-              <h3>Statistics</h3>
+              <h4>Post Now</h4>
             </div>
             <div class="card-body">
-              <div class="stats-grid">
-                <div class="stat">
-                  <span class="stat-value" id="detailTotal">0</span>
-                  <span class="stat-label">Total</span>
-                </div>
-                <div class="stat">
-                  <span class="stat-value success" id="detailSuccess">0</span>
-                  <span class="stat-label">Success</span>
-                </div>
-                <div class="stat">
-                  <span class="stat-value danger" id="detailFailed">0</span>
-                  <span class="stat-label">Failed</span>
-                </div>
-                <div class="stat">
-                  <span class="stat-value" id="detailRate">0%</span>
-                  <span class="stat-label">Rate</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Post Now Section -->
-        <div class="card post-card">
-          <div class="card-header">
-            <h3>Post Now</h3>
-          </div>
-          <div class="card-body">
-            <div class="form-group">
-              <label for="postText">Post Content</label>
-              <textarea id="postText" rows="3" placeholder="Enter your post content..."></textarea>
-            </div>
-            <div class="form-row">
               <div class="form-group">
-                <label for="buttonUrl">Button URL</label>
-                <input type="url" id="buttonUrl" placeholder="https://example.com">
+                <label for="postText">Post Content</label>
+                <textarea id="postText" rows="3" placeholder="Enter your post content..."></textarea>
               </div>
-              <div class="form-group">
-                <label for="buttonText">Button Text</label>
-                <input type="text" id="buttonText" placeholder="Learn More">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="buttonUrl">Button URL</label>
+                  <input type="url" id="buttonUrl" placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                  <label for="buttonText">Button Text</label>
+                  <input type="text" id="buttonText" placeholder="Learn More">
+                </div>
               </div>
-            </div>
-            <div class="button-row">
-              <button class="btn btn-primary btn-large" id="postNowBtn" onclick="postNow()">
-                Post Now
-              </button>
-              <button class="btn btn-secondary" onclick="useDefaultPost()">
-                Use Default
-              </button>
+              <div class="button-row">
+                <button class="btn btn-primary" id="postNowBtn" onclick="postNow()">Post Now</button>
+                <button class="btn btn-secondary" onclick="useDefaultPost()">Use Default</button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Post History -->
-        <div class="card history-card">
-          <div class="card-header">
-            <h3>Post History</h3>
-            <button class="btn btn-small" onclick="refreshHistory()">Refresh</button>
-          </div>
-          <div class="card-body">
-            <div class="history-list" id="historyList">
-              <p class="empty-state">No posts yet for this business</p>
+          <!-- Post History -->
+          <div class="card">
+            <div class="card-header">
+              <h4>Post History</h4>
+              <button class="btn btn-small" onclick="refreshHistory()">Refresh</button>
+            </div>
+            <div class="card-body">
+              <div class="history-list" id="historyList">
+                <p class="empty-state">No posts yet</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Dashboard Page (placeholder) -->
+      <div class="page" id="page-dashboard">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+        </div>
+        <div class="dashboard-stats">
+          <div class="stat-card large">
+            <span class="stat-value" id="dashTotalClients">0</span>
+            <span class="stat-label">Total Clients</span>
+          </div>
+          <div class="stat-card large">
+            <span class="stat-value" id="dashGbpEnabled">0</span>
+            <span class="stat-label">GBP Enabled</span>
+          </div>
+          <div class="stat-card large">
+            <span class="stat-value" id="dashActiveSchedules">0</span>
+            <span class="stat-label">Active Schedules</span>
+          </div>
+          <div class="stat-card large">
+            <span class="stat-value" id="dashTotalPosts">0</span>
+            <span class="stat-label">Total Posts</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h4>Recent Activity</h4>
+          </div>
+          <div class="card-body">
+            <div class="activity-log" id="activityLog">
+              <p class="empty-state">No recent activity</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other pages (placeholders) -->
+      <div class="page" id="page-tasks">
+        <div class="page-header"><h2>Tasks</h2></div>
+        <p class="empty-state">Tasks feature coming soon</p>
+      </div>
+      <div class="page" id="page-kanban">
+        <div class="page-header"><h2>Kanban Board</h2></div>
+        <p class="empty-state">Kanban Board feature coming soon</p>
+      </div>
+      <div class="page" id="page-time">
+        <div class="page-header"><h2>Time Tracking</h2></div>
+        <p class="empty-state">Time Tracking feature coming soon</p>
+      </div>
     </main>
+  </div>
+
+  <!-- Add/Edit Client Modal -->
+  <div class="modal-overlay hidden" id="clientModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add New Client</h3>
+        <button class="modal-close" onclick="closeClientModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="clientName">Client Name *</label>
+          <input type="text" id="clientName" placeholder="Enter client name" required>
+        </div>
+        <div class="form-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="clientGbpEnabled" checked>
+            <span>GBP Enabled</span>
+          </label>
+        </div>
+        <div class="form-group">
+          <label for="clientDefaultPost">Default Post Text</label>
+          <textarea id="clientDefaultPost" rows="2" placeholder="Default post content for this client..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="clientButtonUrl">Default Button URL</label>
+          <input type="url" id="clientButtonUrl" placeholder="https://example.com">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeClientModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+      </div>
+    </div>
   </div>
 
   <!-- Toast Notifications -->

@@ -1,5 +1,5 @@
 /**
- * Google Business Profile Multi-Poster Dashboard
+ * Agency Hub - GBP Automation Dashboard
  * Frontend JavaScript
  */
 
@@ -7,99 +7,136 @@
 const socket = io();
 
 // State
-let businesses = [];
-let selectedBusinessId = null;
-let selectedBusiness = null;
+let clients = [];
+let selectedClientId = null;
+let selectedClient = null;
+let editingClientId = null;
 
 // DOM Elements
 const elements = {
-  // Global
-  globalTotal: document.getElementById('globalTotal'),
-  globalActive: document.getElementById('globalActive'),
-  globalPosts: document.getElementById('globalPosts'),
-  businessList: document.getElementById('businessList'),
-  logList: document.getElementById('logList'),
-  toastContainer: document.getElementById('toastContainer'),
+  // Navigation
+  navItems: document.querySelectorAll('.nav-item'),
+  pages: document.querySelectorAll('.page'),
 
-  // Main content
-  placeholder: document.getElementById('placeholder'),
-  businessDetail: document.getElementById('businessDetail'),
+  // Clients Page
+  clientsGrid: document.getElementById('clientsGrid'),
 
-  // Detail view
-  detailName: document.getElementById('detailName'),
-  detailSchedulerBadge: document.getElementById('detailSchedulerBadge'),
-  detailCron: document.getElementById('detailCron'),
-  detailTimezone: document.getElementById('detailTimezone'),
-  detailNextRun: document.getElementById('detailNextRun'),
+  // GBP Automation Page
+  gbpPlaceholder: document.getElementById('gbpPlaceholder'),
+  gbpDetail: document.getElementById('gbpDetail'),
+  gbpClientName: document.getElementById('gbpClientName'),
+  gbpSchedulerBadge: document.getElementById('gbpSchedulerBadge'),
+  gbpCron: document.getElementById('gbpCron'),
+  gbpTimezone: document.getElementById('gbpTimezone'),
+  gbpNextRun: document.getElementById('gbpNextRun'),
   postingIndicator: document.getElementById('postingIndicator'),
   startSchedulerBtn: document.getElementById('startSchedulerBtn'),
   stopSchedulerBtn: document.getElementById('stopSchedulerBtn'),
-  detailTotal: document.getElementById('detailTotal'),
-  detailSuccess: document.getElementById('detailSuccess'),
-  detailFailed: document.getElementById('detailFailed'),
-  detailRate: document.getElementById('detailRate'),
+  gbpTotalPosts: document.getElementById('gbpTotalPosts'),
+  gbpSuccessPosts: document.getElementById('gbpSuccessPosts'),
+  gbpFailedPosts: document.getElementById('gbpFailedPosts'),
+  gbpSuccessRate: document.getElementById('gbpSuccessRate'),
   postText: document.getElementById('postText'),
   buttonUrl: document.getElementById('buttonUrl'),
   buttonText: document.getElementById('buttonText'),
   postNowBtn: document.getElementById('postNowBtn'),
-  historyList: document.getElementById('historyList')
+  historyList: document.getElementById('historyList'),
+
+  // Dashboard
+  dashTotalClients: document.getElementById('dashTotalClients'),
+  dashGbpEnabled: document.getElementById('dashGbpEnabled'),
+  dashActiveSchedules: document.getElementById('dashActiveSchedules'),
+  dashTotalPosts: document.getElementById('dashTotalPosts'),
+  activityLog: document.getElementById('activityLog'),
+
+  // Modal
+  clientModal: document.getElementById('clientModal'),
+  modalTitle: document.getElementById('modalTitle'),
+  clientName: document.getElementById('clientName'),
+  clientGbpEnabled: document.getElementById('clientGbpEnabled'),
+  clientDefaultPost: document.getElementById('clientDefaultPost'),
+  clientButtonUrl: document.getElementById('clientButtonUrl'),
+
+  // Toast
+  toastContainer: document.getElementById('toastContainer')
 };
+
+// =============================================================================
+// Navigation
+// =============================================================================
+
+function initNavigation() {
+  elements.navItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = item.getAttribute('data-page');
+      navigateToPage(page);
+    });
+  });
+}
+
+function navigateToPage(pageName) {
+  // Update nav items
+  elements.navItems.forEach(item => {
+    item.classList.toggle('active', item.getAttribute('data-page') === pageName);
+  });
+
+  // Update pages
+  elements.pages.forEach(page => {
+    page.classList.toggle('active', page.id === `page-${pageName}`);
+  });
+
+  // Update dashboard stats when navigating to dashboard
+  if (pageName === 'dashboard') {
+    updateDashboard();
+  }
+}
 
 // =============================================================================
 // Socket.IO Event Handlers
 // =============================================================================
 
 socket.on('connect', () => {
-  addLog('Connected to server', 'success');
+  console.log('Connected to server');
+  showToast('Connected to server', 'success');
 });
 
 socket.on('disconnect', () => {
-  addLog('Disconnected from server', 'error');
-});
-
-socket.on('global-status', (status) => {
-  updateGlobalStatus(status);
+  console.log('Disconnected from server');
+  showToast('Disconnected from server', 'error');
 });
 
 socket.on('businesses', (data) => {
-  businesses = data;
-  renderBusinessList();
-  updateGlobalCounts();
+  clients = data;
+  renderClientCards();
+  updateDashboard();
 });
 
 socket.on('business-updated', (business) => {
   if (!business) return;
 
   // Update in local state
-  const index = businesses.findIndex(b => b.id === business.id);
+  const index = clients.findIndex(c => c.id === business.id);
   if (index !== -1) {
-    businesses[index] = business;
+    clients[index] = business;
   }
 
-  // Re-render list
-  renderBusinessList();
-  updateGlobalCounts();
+  // Re-render
+  renderClientCards();
+  updateDashboard();
 
-  // Update detail view if this is the selected business
-  if (selectedBusinessId === business.id) {
-    selectedBusiness = business;
-    updateDetailView();
+  // Update GBP detail if this is the selected client
+  if (selectedClientId === business.id) {
+    selectedClient = business;
+    updateGbpDetail();
   }
 });
 
 socket.on('posting-started', ({ businessId, businessName, trigger }) => {
-  addLog(`Posting started for ${businessName} (${trigger})`, 'info');
+  addActivityLog(`Posting started for ${businessName} (${trigger})`);
 
-  // Update business card
-  const card = document.querySelector(`[data-business-id="${businessId}"]`);
-  if (card) {
-    card.classList.add('posting');
-    const dot = card.querySelector('.status-dot');
-    if (dot) dot.classList.add('posting');
-  }
-
-  // Update detail view
-  if (selectedBusinessId === businessId) {
+  // Update GBP detail
+  if (selectedClientId === businessId) {
     elements.postingIndicator.classList.remove('hidden');
     elements.postNowBtn.disabled = true;
   }
@@ -107,23 +144,15 @@ socket.on('posting-started', ({ businessId, businessName, trigger }) => {
 
 socket.on('posting-complete', ({ businessId, businessName, result }) => {
   if (result.success) {
-    addLog(`Post successful for ${businessName}`, 'success');
+    addActivityLog(`Post successful for ${businessName}`);
     showToast(`Posted to ${businessName}`, 'success');
   } else {
-    addLog(`Post failed for ${businessName}: ${result.message}`, 'error');
+    addActivityLog(`Post failed for ${businessName}: ${result.message}`);
     showToast(`Failed: ${result.message}`, 'error');
   }
 
-  // Update business card
-  const card = document.querySelector(`[data-business-id="${businessId}"]`);
-  if (card) {
-    card.classList.remove('posting');
-    const dot = card.querySelector('.status-dot');
-    if (dot) dot.classList.remove('posting');
-  }
-
-  // Update detail view
-  if (selectedBusinessId === businessId) {
+  // Update GBP detail
+  if (selectedClientId === businessId) {
     elements.postingIndicator.classList.add('hidden');
     elements.postNowBtn.disabled = false;
     refreshHistory();
@@ -131,90 +160,114 @@ socket.on('posting-complete', ({ businessId, businessName, result }) => {
 });
 
 // =============================================================================
-// UI Rendering
+// Clients Page
 // =============================================================================
 
-function updateGlobalStatus(status) {
-  elements.globalTotal.textContent = status.totalBusinesses;
-  elements.globalActive.textContent = status.activeSchedulers;
-  elements.globalPosts.textContent = status.stats?.totalPosts || 0;
-}
-
-function updateGlobalCounts() {
-  const total = businesses.length;
-  const active = businesses.filter(b => b.schedulerRunning).length;
-  const posts = businesses.reduce((sum, b) => sum + (b.stats?.totalPosts || 0), 0);
-
-  elements.globalTotal.textContent = total;
-  elements.globalActive.textContent = active;
-  elements.globalPosts.textContent = posts;
-}
-
-function renderBusinessList() {
-  if (!businesses || businesses.length === 0) {
-    elements.businessList.innerHTML = '<p class="empty-state">No businesses configured</p>';
+function renderClientCards() {
+  if (!clients || clients.length === 0) {
+    elements.clientsGrid.innerHTML = '<p class="empty-state">No clients configured</p>';
     return;
   }
 
-  const html = businesses.map(business => {
-    const isSelected = business.id === selectedBusinessId;
-    const isPosting = business.postingInProgress;
-    const isScheduled = business.schedulerRunning;
+  const html = clients.map(client => {
+    const badges = [];
+    if (client.enabled) {
+      badges.push('<span class="badge badge-gbp">GBP Enabled</span>');
+    }
+    if (client.schedulerRunning) {
+      badges.push('<span class="badge badge-scheduled">Scheduled</span>');
+    }
 
     return `
-      <div class="business-card ${isSelected ? 'selected' : ''} ${isPosting ? 'posting' : ''}"
-           data-business-id="${business.id}"
-           onclick="selectBusiness('${business.id}')">
-        <div class="business-card-header">
-          <span class="business-card-name">${escapeHtml(business.name)}</span>
-          <div class="business-card-status">
-            <span class="status-dot ${isScheduled ? 'active' : ''} ${isPosting ? 'posting' : ''}"></span>
-          </div>
+      <div class="client-card" data-client-id="${client.id}">
+        <div class="client-card-name">${escapeHtml(client.name)}</div>
+        <div class="client-card-badges">
+          ${badges.join(' ')}
         </div>
-        <div class="business-card-meta">
-          <span>${business.stats?.totalPosts || 0} posts</span>
-          <span>${isScheduled ? 'Scheduled' : 'Not scheduled'}</span>
+        <div class="client-card-actions">
+          <button class="btn btn-primary btn-small" onclick="openGbpForClient('${client.id}')">Manage GBP</button>
+          <button class="btn btn-secondary btn-small" onclick="editClient('${client.id}')">Edit</button>
         </div>
       </div>
     `;
   }).join('');
 
-  elements.businessList.innerHTML = html;
+  elements.clientsGrid.innerHTML = html;
 }
 
-function updateDetailView() {
-  if (!selectedBusiness) return;
+function openGbpForClient(clientId) {
+  selectedClientId = clientId;
+  selectedClient = clients.find(c => c.id === clientId);
 
-  const b = selectedBusiness;
+  if (!selectedClient) return;
+
+  // Navigate to GBP page
+  navigateToPage('gbp');
+
+  // Show detail view
+  elements.gbpPlaceholder.classList.add('hidden');
+  elements.gbpDetail.classList.remove('hidden');
+
+  // Update detail
+  updateGbpDetail();
+
+  // Load history
+  refreshHistory();
+
+  // Clear form
+  elements.postText.value = '';
+  elements.buttonUrl.value = '';
+  elements.buttonText.value = '';
+}
+
+function closeGbpDetail() {
+  selectedClientId = null;
+  selectedClient = null;
+
+  elements.gbpPlaceholder.classList.remove('hidden');
+  elements.gbpDetail.classList.add('hidden');
+
+  // Go back to clients page
+  navigateToPage('clients');
+}
+
+// =============================================================================
+// GBP Detail View
+// =============================================================================
+
+function updateGbpDetail() {
+  if (!selectedClient) return;
+
+  const c = selectedClient;
 
   // Header
-  elements.detailName.textContent = b.name;
+  elements.gbpClientName.textContent = c.name;
 
   // Scheduler badge
-  if (b.schedulerRunning) {
-    elements.detailSchedulerBadge.textContent = 'Scheduled';
-    elements.detailSchedulerBadge.className = 'status-badge running';
+  if (c.schedulerRunning) {
+    elements.gbpSchedulerBadge.textContent = 'Scheduled';
+    elements.gbpSchedulerBadge.className = 'status-badge scheduled';
     elements.startSchedulerBtn.disabled = true;
     elements.stopSchedulerBtn.disabled = false;
   } else {
-    elements.detailSchedulerBadge.textContent = 'Not Scheduled';
-    elements.detailSchedulerBadge.className = 'status-badge stopped';
+    elements.gbpSchedulerBadge.textContent = 'Not Scheduled';
+    elements.gbpSchedulerBadge.className = 'status-badge stopped';
     elements.startSchedulerBtn.disabled = false;
     elements.stopSchedulerBtn.disabled = true;
   }
 
   // Schedule info
-  elements.detailCron.textContent = b.schedule?.cron || '0 9 * * *';
-  elements.detailTimezone.textContent = b.schedule?.timezone || 'America/New_York';
+  elements.gbpCron.textContent = formatCronExpression(c.schedule?.cron || '0 9 * * *');
+  elements.gbpTimezone.textContent = c.schedule?.timezone || 'America/Chicago';
 
-  if (b.nextScheduledRun) {
-    elements.detailNextRun.textContent = formatDateTime(new Date(b.nextScheduledRun));
+  if (c.nextScheduledRun) {
+    elements.gbpNextRun.textContent = formatDateTime(new Date(c.nextScheduledRun));
   } else {
-    elements.detailNextRun.textContent = '--';
+    elements.gbpNextRun.textContent = '--';
   }
 
   // Posting indicator
-  if (b.postingInProgress) {
+  if (c.postingInProgress) {
     elements.postingIndicator.classList.remove('hidden');
     elements.postNowBtn.disabled = true;
   } else {
@@ -223,22 +276,146 @@ function updateDetailView() {
   }
 
   // Stats
-  elements.detailTotal.textContent = b.stats?.totalPosts || 0;
-  elements.detailSuccess.textContent = b.stats?.successfulPosts || 0;
-  elements.detailFailed.textContent = b.stats?.failedPosts || 0;
-  elements.detailRate.textContent = (b.stats?.successRate || 0) + '%';
+  elements.gbpTotalPosts.textContent = c.stats?.totalPosts || 0;
+  elements.gbpSuccessPosts.textContent = c.stats?.successfulPosts || 0;
+  elements.gbpFailedPosts.textContent = c.stats?.failedPosts || 0;
+  elements.gbpSuccessRate.textContent = (c.stats?.successRate || 0) + '%';
 
-  // Default post content
-  if (b.defaultPost) {
-    elements.postText.placeholder = b.defaultPost.text || 'Enter post content...';
-    elements.buttonUrl.placeholder = b.defaultPost.buttonUrl || 'https://example.com';
-    elements.buttonText.placeholder = b.defaultPost.buttonText || 'Learn More';
+  // Default post content placeholders
+  if (c.defaultPost) {
+    elements.postText.placeholder = c.defaultPost.text || 'Enter post content...';
+    elements.buttonUrl.placeholder = c.defaultPost.buttonUrl || 'https://example.com';
+    elements.buttonText.placeholder = c.defaultPost.buttonText || 'Learn More';
+  }
+}
+
+function formatCronExpression(cron) {
+  const parts = cron.split(' ');
+  if (parts.length >= 2) {
+    const minute = parseInt(parts[0]) || 0;
+    const hour = parseInt(parts[1]) || 9;
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour > 12 ? hour - 12 : hour === 0 ? 12 : hour;
+    const displayMinute = minute.toString().padStart(2, '0');
+    return `${displayHour}:${displayMinute} ${ampm} daily`;
+  }
+  return cron;
+}
+
+// =============================================================================
+// Scheduler Controls
+// =============================================================================
+
+async function startScheduler() {
+  if (!selectedClientId) return;
+
+  try {
+    const response = await fetch(`/api/businesses/${selectedClientId}/scheduler/start`, {
+      method: 'POST'
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      showToast('Daily posting enabled', 'success');
+      addActivityLog(`Scheduler started for ${selectedClient.name}`);
+    } else {
+      showToast(data.error, 'error');
+    }
+  } catch (error) {
+    showToast('Failed to start scheduler', 'error');
+  }
+}
+
+async function stopScheduler() {
+  if (!selectedClientId) return;
+
+  try {
+    const response = await fetch(`/api/businesses/${selectedClientId}/scheduler/stop`, {
+      method: 'POST'
+    });
+    const data = await response.json();
+
+    if (response.ok) {
+      showToast('Daily posting disabled', 'info');
+      addActivityLog(`Scheduler stopped for ${selectedClient.name}`);
+    } else {
+      showToast(data.error, 'error');
+    }
+  } catch (error) {
+    showToast('Failed to stop scheduler', 'error');
+  }
+}
+
+// =============================================================================
+// Manual Posting
+// =============================================================================
+
+async function postNow() {
+  if (!selectedClientId) return;
+
+  const text = elements.postText.value.trim() || selectedClient.defaultPost?.text;
+  const buttonUrlVal = elements.buttonUrl.value.trim() || selectedClient.defaultPost?.buttonUrl;
+  const buttonTextVal = elements.buttonText.value.trim() || selectedClient.defaultPost?.buttonText;
+
+  if (!text) {
+    showToast('Please enter post text or use default', 'error');
+    return;
+  }
+
+  try {
+    elements.postNowBtn.disabled = true;
+    addActivityLog(`Initiating post for ${selectedClient.name}...`);
+
+    const response = await fetch(`/api/businesses/${selectedClientId}/post`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, buttonUrl: buttonUrlVal, buttonText: buttonTextVal })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      showToast('Post initiated', 'info');
+      elements.postText.value = '';
+      elements.buttonUrl.value = '';
+      elements.buttonText.value = '';
+    } else {
+      showToast(data.error, 'error');
+      elements.postNowBtn.disabled = false;
+    }
+  } catch (error) {
+    showToast('Failed to initiate post', 'error');
+    elements.postNowBtn.disabled = false;
+  }
+}
+
+function useDefaultPost() {
+  if (!selectedClient?.defaultPost) return;
+
+  elements.postText.value = selectedClient.defaultPost.text || '';
+  elements.buttonUrl.value = selectedClient.defaultPost.buttonUrl || '';
+  elements.buttonText.value = selectedClient.defaultPost.buttonText || '';
+}
+
+// =============================================================================
+// History
+// =============================================================================
+
+async function refreshHistory() {
+  if (!selectedClientId) return;
+
+  try {
+    const response = await fetch(`/api/businesses/${selectedClientId}/history`);
+    const history = await response.json();
+    renderHistory(history);
+  } catch (error) {
+    console.error('Failed to refresh history:', error);
   }
 }
 
 function renderHistory(history) {
   if (!history || history.length === 0) {
-    elements.historyList.innerHTML = '<p class="empty-state">No posts yet for this business</p>';
+    elements.historyList.innerHTML = '<p class="empty-state">No posts yet</p>';
     return;
   }
 
@@ -248,11 +425,11 @@ function renderHistory(history) {
         ${entry.success ? '✓' : '✗'}
       </div>
       <div class="history-content">
-        <div class="history-text">${escapeHtml(entry.postText)}</div>
+        <div class="history-text">${escapeHtml(entry.postText || entry.message || 'Post')}</div>
         <div class="history-meta">
           <span>${formatDateTime(new Date(entry.timestamp))}</span>
           <span>${entry.duration ? (entry.duration / 1000).toFixed(1) + 's' : '--'}</span>
-          <span class="history-badge ${entry.trigger}">${entry.trigger}</span>
+          <span class="history-badge ${entry.trigger}">${entry.trigger || 'manual'}</span>
         </div>
       </div>
     </div>
@@ -261,20 +438,122 @@ function renderHistory(history) {
   elements.historyList.innerHTML = html;
 }
 
-function addLog(message, type = 'info') {
-  const timestamp = new Date().toLocaleTimeString();
-  const entry = document.createElement('p');
-  entry.className = `log-entry ${type}`;
-  entry.textContent = `[${timestamp}] ${message}`;
+// =============================================================================
+// Dashboard
+// =============================================================================
 
-  elements.logList.appendChild(entry);
-  elements.logList.scrollTop = elements.logList.scrollHeight;
+function updateDashboard() {
+  const totalClients = clients.length;
+  const gbpEnabled = clients.filter(c => c.enabled).length;
+  const activeSchedules = clients.filter(c => c.schedulerRunning).length;
+  const totalPosts = clients.reduce((sum, c) => sum + (c.stats?.totalPosts || 0), 0);
 
-  // Keep only last 30 entries
-  while (elements.logList.children.length > 30) {
-    elements.logList.removeChild(elements.logList.firstChild);
+  elements.dashTotalClients.textContent = totalClients;
+  elements.dashGbpEnabled.textContent = gbpEnabled;
+  elements.dashActiveSchedules.textContent = activeSchedules;
+  elements.dashTotalPosts.textContent = totalPosts;
+}
+
+function addActivityLog(message) {
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.innerHTML = `
+    <div>${escapeHtml(message)}</div>
+    <div class="activity-time">${new Date().toLocaleTimeString()}</div>
+  `;
+
+  // Remove empty state if exists
+  const emptyState = elements.activityLog.querySelector('.empty-state');
+  if (emptyState) {
+    emptyState.remove();
+  }
+
+  elements.activityLog.insertBefore(item, elements.activityLog.firstChild);
+
+  // Keep only last 20 entries
+  while (elements.activityLog.children.length > 20) {
+    elements.activityLog.removeChild(elements.activityLog.lastChild);
   }
 }
+
+// =============================================================================
+// Client Modal
+// =============================================================================
+
+function showAddClientModal() {
+  editingClientId = null;
+  elements.modalTitle.textContent = 'Add New Client';
+  elements.clientName.value = '';
+  elements.clientGbpEnabled.checked = true;
+  elements.clientDefaultPost.value = '';
+  elements.clientButtonUrl.value = '';
+  elements.clientModal.classList.remove('hidden');
+}
+
+function editClient(clientId) {
+  const client = clients.find(c => c.id === clientId);
+  if (!client) return;
+
+  editingClientId = clientId;
+  elements.modalTitle.textContent = 'Edit Client';
+  elements.clientName.value = client.name;
+  elements.clientGbpEnabled.checked = client.enabled;
+  elements.clientDefaultPost.value = client.defaultPost?.text || '';
+  elements.clientButtonUrl.value = client.defaultPost?.buttonUrl || '';
+  elements.clientModal.classList.remove('hidden');
+}
+
+function closeClientModal() {
+  elements.clientModal.classList.add('hidden');
+  editingClientId = null;
+}
+
+async function saveClient() {
+  const name = elements.clientName.value.trim();
+  if (!name) {
+    showToast('Client name is required', 'error');
+    return;
+  }
+
+  const clientData = {
+    name,
+    enabled: elements.clientGbpEnabled.checked,
+    defaultPost: {
+      text: elements.clientDefaultPost.value.trim(),
+      buttonUrl: elements.clientButtonUrl.value.trim(),
+      buttonText: 'Learn More'
+    }
+  };
+
+  try {
+    if (editingClientId) {
+      // Update existing
+      const response = await fetch(`/api/businesses/${editingClientId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(clientData)
+      });
+
+      if (response.ok) {
+        showToast('Client updated', 'success');
+        closeClientModal();
+      } else {
+        const data = await response.json();
+        showToast(data.error || 'Failed to update', 'error');
+      }
+    } else {
+      // Note: Add client API would need to be implemented on the server
+      showToast('Adding new clients not yet implemented', 'info');
+      closeClientModal();
+    }
+  } catch (error) {
+    showToast('Failed to save client', 'error');
+  }
+}
+
+// =============================================================================
+// Toast Notifications
+// =============================================================================
 
 function showToast(message, type = 'info') {
   const toast = document.createElement('div');
@@ -293,165 +572,6 @@ function showToast(message, type = 'info') {
 }
 
 // =============================================================================
-// Business Selection
-// =============================================================================
-
-function selectBusiness(businessId) {
-  selectedBusinessId = businessId;
-  selectedBusiness = businesses.find(b => b.id === businessId);
-
-  if (!selectedBusiness) return;
-
-  // Update UI
-  elements.placeholder.classList.add('hidden');
-  elements.businessDetail.classList.remove('hidden');
-
-  // Update list selection
-  document.querySelectorAll('.business-card').forEach(card => {
-    card.classList.remove('selected');
-  });
-  const selectedCard = document.querySelector(`[data-business-id="${businessId}"]`);
-  if (selectedCard) {
-    selectedCard.classList.add('selected');
-  }
-
-  // Update detail view
-  updateDetailView();
-
-  // Load history
-  refreshHistory();
-
-  // Clear form
-  elements.postText.value = '';
-  elements.buttonUrl.value = '';
-  elements.buttonText.value = '';
-
-  addLog(`Selected: ${selectedBusiness.name}`, 'info');
-}
-
-function deselectBusiness() {
-  selectedBusinessId = null;
-  selectedBusiness = null;
-
-  elements.placeholder.classList.remove('hidden');
-  elements.businessDetail.classList.add('hidden');
-
-  document.querySelectorAll('.business-card').forEach(card => {
-    card.classList.remove('selected');
-  });
-}
-
-// =============================================================================
-// API Functions
-// =============================================================================
-
-async function startScheduler() {
-  if (!selectedBusinessId) return;
-
-  try {
-    const response = await fetch(`/api/businesses/${selectedBusinessId}/scheduler/start`, {
-      method: 'POST'
-    });
-    const data = await response.json();
-
-    if (response.ok) {
-      addLog(`Scheduler started for ${selectedBusiness.name}`, 'success');
-      showToast('Daily posting enabled', 'success');
-    } else {
-      addLog(`Failed to start scheduler: ${data.error}`, 'error');
-      showToast(data.error, 'error');
-    }
-  } catch (error) {
-    addLog(`Error: ${error.message}`, 'error');
-    showToast('Failed to start scheduler', 'error');
-  }
-}
-
-async function stopScheduler() {
-  if (!selectedBusinessId) return;
-
-  try {
-    const response = await fetch(`/api/businesses/${selectedBusinessId}/scheduler/stop`, {
-      method: 'POST'
-    });
-    const data = await response.json();
-
-    if (response.ok) {
-      addLog(`Scheduler stopped for ${selectedBusiness.name}`, 'warning');
-      showToast('Daily posting disabled', 'info');
-    } else {
-      addLog(`Failed to stop scheduler: ${data.error}`, 'error');
-      showToast(data.error, 'error');
-    }
-  } catch (error) {
-    addLog(`Error: ${error.message}`, 'error');
-    showToast('Failed to stop scheduler', 'error');
-  }
-}
-
-async function postNow() {
-  if (!selectedBusinessId) return;
-
-  const text = elements.postText.value.trim() || selectedBusiness.defaultPost?.text;
-  const buttonUrl = elements.buttonUrl.value.trim() || selectedBusiness.defaultPost?.buttonUrl;
-  const buttonText = elements.buttonText.value.trim() || selectedBusiness.defaultPost?.buttonText;
-
-  if (!text) {
-    showToast('Please enter post text or use default', 'error');
-    return;
-  }
-
-  try {
-    elements.postNowBtn.disabled = true;
-    addLog(`Initiating post for ${selectedBusiness.name}...`, 'info');
-
-    const response = await fetch(`/api/businesses/${selectedBusinessId}/post`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, buttonUrl, buttonText })
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      showToast('Post initiated', 'info');
-      // Clear form
-      elements.postText.value = '';
-      elements.buttonUrl.value = '';
-      elements.buttonText.value = '';
-    } else {
-      addLog(`Failed: ${data.error}`, 'error');
-      showToast(data.error, 'error');
-      elements.postNowBtn.disabled = false;
-    }
-  } catch (error) {
-    addLog(`Error: ${error.message}`, 'error');
-    showToast('Failed to initiate post', 'error');
-    elements.postNowBtn.disabled = false;
-  }
-}
-
-function useDefaultPost() {
-  if (!selectedBusiness?.defaultPost) return;
-
-  elements.postText.value = selectedBusiness.defaultPost.text || '';
-  elements.buttonUrl.value = selectedBusiness.defaultPost.buttonUrl || '';
-  elements.buttonText.value = selectedBusiness.defaultPost.buttonText || '';
-}
-
-async function refreshHistory() {
-  if (!selectedBusinessId) return;
-
-  try {
-    const response = await fetch(`/api/businesses/${selectedBusinessId}/history`);
-    const history = await response.json();
-    renderHistory(history);
-  } catch (error) {
-    addLog(`Failed to refresh history: ${error.message}`, 'error');
-  }
-}
-
-// =============================================================================
 // Utility Functions
 // =============================================================================
 
@@ -466,6 +586,7 @@ function formatDateTime(date) {
 }
 
 function escapeHtml(text) {
+  if (!text) return '';
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
@@ -476,15 +597,21 @@ function escapeHtml(text) {
 // =============================================================================
 
 async function init() {
+  // Setup navigation
+  initNavigation();
+
+  // Load clients from API
   try {
     const response = await fetch('/api/businesses');
-    businesses = await response.json();
-    renderBusinessList();
-    updateGlobalCounts();
-    addLog(`Loaded ${businesses.length} businesses`, 'info');
+    clients = await response.json();
+    renderClientCards();
+    updateDashboard();
+    console.log(`Loaded ${clients.length} clients`);
   } catch (error) {
-    addLog(`Failed to load businesses: ${error.message}`, 'error');
+    console.error('Failed to load clients:', error);
+    showToast('Failed to load clients', 'error');
   }
 }
 
+// Start the app
 init();
