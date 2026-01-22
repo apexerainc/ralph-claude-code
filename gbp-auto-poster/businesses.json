@@ -1,0 +1,244 @@
+{
+  "businesses": [
+    {
+      "id": "twm-fort-worth",
+      "name": "TWM Water Restoration of Fort Worth",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Need water damage restoration in Fort Worth? Our team is available 24/7 to help you recover quickly!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    },
+    {
+      "id": "rocket-restoration",
+      "name": "Rocket Restoration",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Fast, reliable restoration services when you need them most. Contact Rocket Restoration today!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Learn More"
+      }
+    },
+    {
+      "id": "fusion-plumbing",
+      "name": "Fusion Plumbing LLC",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Professional plumbing services you can trust. Call Fusion Plumbing for all your plumbing needs!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Book Now"
+      }
+    },
+    {
+      "id": "twm-raleigh",
+      "name": "TWM Water Restoration of Raleigh",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/New_York"
+      },
+      "defaultPost": {
+        "text": "Water damage emergency in Raleigh? We're here to help 24/7 with fast, professional restoration!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    },
+    {
+      "id": "pilot-longview",
+      "name": "Pilot Plumbing and Water Restoration of Longview",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Longview's trusted choice for plumbing and water restoration. Available when you need us most!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Contact Us"
+      }
+    },
+    {
+      "id": "frontline-fire-flood",
+      "name": "Frontline Fire & Flood",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Fire or flood damage? Frontline is here to restore your property quickly and professionally!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    },
+    {
+      "id": "flood-fire-pro",
+      "name": "Flood Fire Pro",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Professional flood and fire restoration services. We're here to help you recover!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Learn More"
+      }
+    },
+    {
+      "id": "pilot-portland",
+      "name": "Pilot Plumbing and Water Restoration of Portland",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Los_Angeles"
+      },
+      "defaultPost": {
+        "text": "Portland's trusted plumbing and water restoration experts. Available 24/7 for emergencies!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Contact Us"
+      }
+    },
+    {
+      "id": "divine-water-damage",
+      "name": "Divine Water Damage Restoration Group",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Expert water damage restoration services. Trust Divine to restore your property right!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    },
+    {
+      "id": "twm-dallas",
+      "name": "TWM Water Damage Restoration - Dallas",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Dallas water damage emergency? TWM is here 24/7 with fast, professional restoration services!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    },
+    {
+      "id": "pilot-vancouver",
+      "name": "Pilot Plumbing and Water Restoration of Vancouver",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Los_Angeles"
+      },
+      "defaultPost": {
+        "text": "Vancouver's trusted plumbing and water restoration professionals. We're here when you need us!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Contact Us"
+      }
+    },
+    {
+      "id": "rescue-restoration",
+      "name": "Rescue Restoration LLC",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "When disaster strikes, Rescue Restoration is here to help. Fast, professional service!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    },
+    {
+      "id": "fast-restoration",
+      "name": "Fast Restoration",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Fast, reliable restoration services. We get your property back to normal quickly!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Learn More"
+      }
+    },
+    {
+      "id": "utah-home-restoration",
+      "name": "Utah Home Restoration",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Denver"
+      },
+      "defaultPost": {
+        "text": "Utah's trusted home restoration experts. Water damage, fire damage - we handle it all!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Contact Us"
+      }
+    },
+    {
+      "id": "water-damage-houston",
+      "name": "Water Damage Restoration Experts of Houston",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Chicago"
+      },
+      "defaultPost": {
+        "text": "Houston's water damage restoration experts. Available 24/7 for emergencies!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    },
+    {
+      "id": "swept-away",
+      "name": "Swept Away Water Damage Restoration",
+      "enabled": true,
+      "schedule": {
+        "enabled": false,
+        "cron": "0 9 * * *",
+        "timezone": "America/Los_Angeles"
+      },
+      "defaultPost": {
+        "text": "Don't let water damage ruin your day. Swept Away is here to help with fast, professional service!",
+        "buttonUrl": "https://apexerainc.com",
+        "buttonText": "Get Help Now"
+      }
+    }
+  ]
+}
