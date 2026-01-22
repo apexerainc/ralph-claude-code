@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GBP Auto-Poster Dashboard</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>Google Business Profile Auto-Poster</h1>
+      <p class="business-name" id="businessName">Loading...</p>
+    </header>
+
+    <!-- Status Cards -->
+    <div class="status-grid">
+      <!-- Scheduler Status -->
+      <div class="card status-card">
+        <div class="card-header">
+          <h2>Scheduler Status</h2>
+          <span class="status-badge" id="schedulerBadge">Loading</span>
+        </div>
+        <div class="card-body">
+          <div class="status-row">
+            <span class="label">Schedule:</span>
+            <span id="cronExpression">--</span>
+          </div>
+          <div class="status-row">
+            <span class="label">Timezone:</span>
+            <span id="timezone">--</span>
+          </div>
+          <div class="status-row">
+            <span class="label">Next Post:</span>
+            <span id="nextRun">--</span>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-success" id="startBtn" onclick="startScheduler()">Start</button>
+            <button class="btn btn-danger" id="stopBtn" onclick="stopScheduler()">Stop</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics -->
+      <div class="card stats-card">
+        <div class="card-header">
+          <h2>Statistics</h2>
+        </div>
+        <div class="card-body">
+          <div class="stats-grid">
+            <div class="stat">
+              <span class="stat-value" id="totalPosts">0</span>
+              <span class="stat-label">Total Posts</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value success" id="successPosts">0</span>
+              <span class="stat-label">Successful</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value danger" id="failedPosts">0</span>
+              <span class="stat-label">Failed</span>
+            </div>
+            <div class="stat">
+              <span class="stat-value" id="successRate">0%</span>
+              <span class="stat-label">Success Rate</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Manual Post -->
+    <div class="card post-card">
+      <div class="card-header">
+        <h2>Manual Post</h2>
+        <span class="status-badge hidden" id="postingBadge">Posting...</span>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="postText">Post Text</label>
+          <textarea id="postText" rows="3" placeholder="Enter your post content..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="buttonUrl">Button URL (optional)</label>
+            <input type="url" id="buttonUrl" placeholder="https://your-website.com">
+          </div>
+          <div class="form-group">
+            <label for="buttonText">Button Text (optional)</label>
+            <input type="text" id="buttonText" placeholder="Learn More">
+          </div>
+        </div>
+        <button class="btn btn-primary btn-large" id="postNowBtn" onclick="postNow()">
+          Post Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Post History -->
+    <div class="card history-card">
+      <div class="card-header">
+        <h2>Post History</h2>
+        <button class="btn btn-small" onclick="refreshHistory()">Refresh</button>
+      </div>
+      <div class="card-body">
+        <div class="history-list" id="historyList">
+          <p class="empty-state">No posts yet</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity Log -->
+    <div class="card log-card">
+      <div class="card-header">
+        <h2>Activity Log</h2>
+        <button class="btn btn-small" onclick="clearLog()">Clear</button>
+      </div>
+      <div class="card-body">
+        <div class="log-list" id="logList">
+          <p class="log-entry info">Dashboard connected</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
