@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Living Room Floor Plan</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 20px; }
+  h1 { text-align: center; color: #333; margin-bottom: 5px; }
+  .subtitle { text-align: center; color: #666; font-size: 14px; margin-bottom: 20px; }
+  .plan-container { display: flex; justify-content: center; }
+  .legend { max-width: 900px; margin: 20px auto; background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .legend h3 { margin-top: 0; color: #333; }
+  .legend table { width: 100%; border-collapse: collapse; }
+  .legend td { padding: 6px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+  .legend td:first-child { font-weight: 600; width: 220px; color: #444; }
+  .notes { max-width: 900px; margin: 20px auto; background: #fff9e6; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #f0c040; }
+  .notes h3 { margin-top: 0; color: #886600; }
+  .notes ul { margin: 0; padding-left: 20px; font-size: 14px; color: #555; }
+  .notes li { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<h1>Living Room Floor Plan</h1>
+<p class="subtitle">Estimated from photographs taken at 5 ft height &mdash; dimensions derived from standard architectural references</p>
+
+<div class="plan-container">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 780" width="900" height="730">
+  <defs>
+    <!-- Arrowhead markers for dimension lines -->
+    <marker id="arrow-left" markerWidth="8" markerHeight="6" refX="0" refY="3" orient="auto">
+      <polygon points="8,0 0,3 8,6" fill="#c00"/>
+    </marker>
+    <marker id="arrow-right" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0,0 8,3 0,6" fill="#c00"/>
+    </marker>
+    <marker id="arrow-up" markerWidth="6" markerHeight="8" refX="3" refY="0" orient="auto">
+      <polygon points="0,8 3,0 6,8" fill="#c00"/>
+    </marker>
+    <marker id="arrow-down" markerWidth="6" markerHeight="8" refX="3" refY="8" orient="auto">
+      <polygon points="0,0 3,8 6,0" fill="#c00"/>
+    </marker>
+    <!-- Wall hatch pattern -->
+    <pattern id="wall-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#999" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="960" height="780" fill="#f5f5f5" rx="8"/>
+
+  <!-- Title area -->
+  <text x="480" y="30" text-anchor="middle" font-size="11" fill="#888" font-family="sans-serif">N (North toward windows) &uarr;</text>
+
+  <!-- ============================================ -->
+  <!-- ROOM OUTLINE - Main walls (6" thick = 12px)  -->
+  <!-- Room interior: 19'6" x 14'8"                 -->
+  <!-- Scale: 1 foot = 40px                          -->
+  <!-- Interior: 780px x 587px                       -->
+  <!-- Origin (interior top-left): 90, 60            -->
+  <!-- ============================================ -->
+
+  <!-- Floor fill -->
+  <rect x="90" y="60" width="780" height="587" fill="#f5e6c8" rx="0"/>
+
+  <!-- Hardwood floor lines (subtle) -->
+  <g stroke="#e0cba0" stroke-width="0.5" opacity="0.5">
+    <line x1="90" y1="100" x2="870" y2="100"/>
+    <line x1="90" y1="140" x2="870" y2="140"/>
+    <line x1="90" y1="180" x2="870" y2="180"/>
+    <line x1="90" y1="220" x2="870" y2="220"/>
+    <line x1="90" y1="260" x2="870" y2="260"/>
+    <line x1="90" y1="300" x2="870" y2="300"/>
+    <line x1="90" y1="340" x2="870" y2="340"/>
+    <line x1="90" y1="380" x2="870" y2="380"/>
+    <line x1="90" y1="420" x2="870" y2="420"/>
+    <line x1="90" y1="460" x2="870" y2="460"/>
+    <line x1="90" y1="500" x2="870" y2="500"/>
+    <line x1="90" y1="540" x2="870" y2="540"/>
+    <line x1="90" y1="580" x2="870" y2="580"/>
+    <line x1="90" y1="620" x2="870" y2="620"/>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- WALLS                                         -->
+  <!-- ============================================ -->
+
+  <!-- North Wall (top) - 19'6" = 780px -->
+  <rect x="78" y="48" width="804" height="12" fill="#888" stroke="#555" stroke-width="1"/>
+
+  <!-- South Wall (bottom) - fireplace wall, split around chimney -->
+  <!-- Left section: from x=78 to chimney start -->
+  <rect x="78" y="647" width="280" height="12" fill="#888" stroke="#555" stroke-width="1"/>
+  <!-- Right section: from chimney end to east wall -->
+  <rect x="538" y="647" width="344" height="12" fill="#888" stroke="#555" stroke-width="1"/>
+
+  <!-- West Wall (left) - 14'8" = 587px -->
+  <rect x="78" y="48" width="12" height="611" fill="#888" stroke="#555" stroke-width="1"/>
+
+  <!-- East Wall (right) -->
+  <rect x="870" y="48" width="12" height="611" fill="#888" stroke="#555" stroke-width="1"/>
+
+  <!-- ============================================ -->
+  <!-- CHIMNEY BREAST (projects 14" into room)       -->
+  <!-- Width: 4'6" = 180px, Depth: 14" ~= 47px      -->
+  <!-- Centered position on south wall               -->
+  <!-- ============================================ -->
+
+  <!-- Chimney breast outline -->
+  <rect x="358" y="600" width="180" height="59" fill="#bbb" stroke="#555" stroke-width="1.5"/>
+  <!-- Chimney interior wall beyond -->
+  <rect x="358" y="647" width="180" height="12" fill="#888" stroke="#555" stroke-width="1"/>
+
+  <!-- Fireplace opening (3'0" = 120px wide) centered in chimney -->
+  <rect x="388" y="619" width="120" height="40" fill="#444" stroke="#333" stroke-width="1" rx="2"/>
+  <!-- Fireplace hearth -->
+  <rect x="378" y="593" width="140" height="10" fill="#999" stroke="#777" stroke-width="0.5" rx="1"/>
+
+  <!-- Mantel (5'0" = 200px) -->
+  <line x1="348" y1="600" x2="548" y2="600" stroke="#666" stroke-width="3"/>
+
+  <!-- Label: Fireplace -->
+  <text x="448" y="644" text-anchor="middle" font-size="10" fill="#fff" font-family="sans-serif">FIREPLACE</text>
+  <text x="448" y="614" text-anchor="middle" font-size="9" fill="#666" font-family="sans-serif">Mantel 5'0"</text>
+
+  <!-- Chimney breast dimension -->
+  <text x="448" y="585" text-anchor="middle" font-size="9" fill="#c00" font-family="sans-serif">4'6" wide</text>
+
+  <!-- ============================================ -->
+  <!-- DOOR: Paneled/Closet Door (South wall, left   -->
+  <!-- of chimney) - 2'6" wide = 100px               -->
+  <!-- Position: ~2' from west wall                   -->
+  <!-- ============================================ -->
+  <rect x="158" y="647" width="100" height="12" fill="#f5e6c8" stroke="none"/>
+  <!-- Door swing arc -->
+  <path d="M 158,647 L 158,547 A 100,100 0 0,1 258,647" fill="none" stroke="#4a86c8" stroke-width="1" stroke-dasharray="4,3"/>
+  <!-- Door leaf -->
+  <line x1="158" y1="647" x2="158" y2="547" stroke="#4a86c8" stroke-width="2"/>
+  <text x="208" y="670" text-anchor="middle" font-size="9" fill="#4a86c8" font-family="sans-serif">Door 2'6"</text>
+
+  <!-- ============================================ -->
+  <!-- FRENCH DOUBLE DOORS (West wall)               -->
+  <!-- 4'8" wide = 187px, each leaf 2'4"             -->
+  <!-- Position: centered on west wall                -->
+  <!-- ============================================ -->
+  <rect x="78" y="230" width="12" height="187" fill="#f5e6c8" stroke="none"/>
+  <!-- Door frame -->
+  <rect x="78" y="228" width="12" height="2" fill="#888"/>
+  <rect x="78" y="417" width="12" height="2" fill="#888"/>
+  <!-- Glass panes indication -->
+  <g stroke="#4a86c8" stroke-width="1.5" opacity="0.7">
+    <line x1="84" y1="235" x2="84" y2="320"/>
+    <line x1="84" y1="327" x2="84" y2="412"/>
+  </g>
+  <!-- Door swing arcs (opening inward) -->
+  <path d="M 90,230 L 175,230 A 85,85 0 0,1 90,315" fill="none" stroke="#4a86c8" stroke-width="1" stroke-dasharray="4,3"/>
+  <path d="M 90,417 L 175,417 A 85,85 0 0,0 90,332" fill="none" stroke="#4a86c8" stroke-width="1" stroke-dasharray="4,3"/>
+  <!-- Center line -->
+  <line x1="84" y1="322" x2="84" y2="325" stroke="#4a86c8" stroke-width="2"/>
+
+  <text x="52" y="328" text-anchor="middle" font-size="9" fill="#4a86c8" font-family="sans-serif" writing-mode="tb">French Dbl 4'8"</text>
+
+  <!-- ============================================ -->
+  <!-- WINDOWS - North Wall                          -->
+  <!-- Window 1: 3'0" = 120px wide                   -->
+  <!-- Window 2: 3'0" = 120px wide                   -->
+  <!-- ============================================ -->
+
+  <!-- Window 1 (left side of north wall) -->
+  <rect x="155" y="48" width="120" height="12" fill="#a8d4f0" stroke="#4a86c8" stroke-width="1"/>
+  <line x1="155" y1="54" x2="275" y2="54" stroke="#4a86c8" stroke-width="0.5"/>
+  <text x="215" y="44" text-anchor="middle" font-size="9" fill="#4a86c8" font-family="sans-serif">Window 3'0"</text>
+
+  <!-- Window 2 (right side of north wall) -->
+  <rect x="680" y="48" width="120" height="12" fill="#a8d4f0" stroke="#4a86c8" stroke-width="1"/>
+  <line x1="680" y1="54" x2="800" y2="54" stroke="#4a86c8" stroke-width="0.5"/>
+  <text x="740" y="44" text-anchor="middle" font-size="9" fill="#4a86c8" font-family="sans-serif">Window 3'0"</text>
+
+  <!-- ============================================ -->
+  <!-- FRENCH SINGLE DOOR (North wall, center)       -->
+  <!-- 2'8" wide = 107px                             -->
+  <!-- ============================================ -->
+  <rect x="420" y="48" width="107" height="12" fill="#f5e6c8" stroke="none"/>
+  <!-- Door frame -->
+  <rect x="418" y="48" width="2" height="12" fill="#888"/>
+  <rect x="527" y="48" width="2" height="12" fill="#888"/>
+  <!-- Glass pane indication -->
+  <line x1="473" y1="52" x2="473" y2="58" stroke="#4a86c8" stroke-width="1.5" opacity="0.7"/>
+  <!-- Door swing -->
+  <path d="M 420,60 L 420,167 A 107,107 0 0,0 527,60" fill="none" stroke="#4a86c8" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="420" y1="60" x2="420" y2="167" stroke="#4a86c8" stroke-width="2"/>
+  <text x="473" y="44" text-anchor="middle" font-size="9" fill="#4a86c8" font-family="sans-serif">French Door 2'8"</text>
+
+  <!-- ============================================ -->
+  <!-- DOORWAY / OPENING (East wall, toward north)   -->
+  <!-- 2'8" wide = 107px                             -->
+  <!-- ============================================ -->
+  <rect x="870" y="140" width="12" height="107" fill="#f5e6c8" stroke="none"/>
+  <!-- Door frame -->
+  <rect x="870" y="138" width="12" height="2" fill="#888"/>
+  <rect x="870" y="247" width="12" height="2" fill="#888"/>
+  <!-- Door swing -->
+  <path d="M 870,140 L 763,140 A 107,107 0 0,0 870,247" fill="none" stroke="#4a86c8" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="870" y1="140" x2="763" y2="140" stroke="#4a86c8" stroke-width="2"/>
+  <text x="903" y="200" text-anchor="middle" font-size="9" fill="#4a86c8" font-family="sans-serif" writing-mode="tb">Door 2'8"</text>
+
+  <!-- ============================================ -->
+  <!-- ELECTRICAL OUTLETS (12" AFF = shown as dots)  -->
+  <!-- ============================================ -->
+  <g fill="#f0a030" stroke="#c07000" stroke-width="0.5">
+    <!-- Outlet 1: South wall, left of chimney -->
+    <rect x="130" y="644" width="10" height="6" rx="1"/>
+    <!-- Outlet 2: South wall, right of chimney -->
+    <rect x="580" y="644" width="10" height="6" rx="1"/>
+    <!-- Outlet 3: North wall, between window 1 and french door -->
+    <rect x="340" y="51" width="10" height="6" rx="1"/>
+    <!-- Outlet 4: North wall, right of window 2 -->
+    <rect x="820" y="51" width="10" height="6" rx="1"/>
+    <!-- Outlet 5: East wall, south section -->
+    <rect x="867" y="450" width="6" height="10" rx="1"/>
+    <!-- Outlet 6: West wall, south of french doors -->
+    <rect x="81" y="500" width="6" height="10" rx="1"/>
+    <!-- Outlet 7: West wall, north of french doors -->
+    <rect x="81" y="140" width="6" height="10" rx="1"/>
+  </g>
+
+  <!-- Outlet labels -->
+  <g font-size="7" fill="#c07000" font-family="sans-serif">
+    <text x="135" y="642">outlet</text>
+    <text x="585" y="642">outlet</text>
+    <text x="345" y="48">outlet</text>
+    <text x="825" y="48">outlet</text>
+    <text x="850" y="458" text-anchor="end">outlet</text>
+    <text x="100" y="508">outlet</text>
+    <text x="100" y="148">outlet</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- FURNITURE (light outlines for context)        -->
+  <!-- ============================================ -->
+
+  <!-- Area Rug (8' x 10') -->
+  <rect x="230" y="200" width="400" height="320" fill="#ddd5c5" stroke="#bbb0a0" stroke-width="1" rx="4" opacity="0.6"/>
+  <text x="430" y="365" text-anchor="middle" font-size="11" fill="#998870" font-family="sans-serif">Area Rug 8' x 10'</text>
+
+  <!-- Leather Reclining Sofa -->
+  <rect x="260" y="240" width="280" height="90" fill="none" stroke="#8b6914" stroke-width="1.5" rx="6" stroke-dasharray="6,3"/>
+  <text x="400" y="290" text-anchor="middle" font-size="10" fill="#8b6914" font-family="sans-serif">Reclining Sofa ~7'0" x 2'8"</text>
+
+  <!-- Gray Armchair (near fireplace) -->
+  <rect x="560" y="510" width="80" height="70" fill="none" stroke="#8b6914" stroke-width="1" rx="6" stroke-dasharray="6,3"/>
+  <text x="600" y="550" text-anchor="middle" font-size="8" fill="#8b6914" font-family="sans-serif">Chair</text>
+
+  <!-- Side Table with Lamp -->
+  <rect x="550" y="252" width="50" height="60" fill="none" stroke="#8b6914" stroke-width="1" rx="3" stroke-dasharray="6,3"/>
+  <text x="575" y="287" text-anchor="middle" font-size="7" fill="#8b6914" font-family="sans-serif">End Tbl</text>
+
+  <!-- Credenza (right of fireplace) -->
+  <rect x="555" y="590" width="120" height="40" fill="none" stroke="#8b6914" stroke-width="1" rx="3" stroke-dasharray="6,3"/>
+  <text x="615" y="614" text-anchor="middle" font-size="8" fill="#8b6914" font-family="sans-serif">Credenza</text>
+
+  <!-- TV above fireplace -->
+  <rect x="398" y="596" width="100" height="4" fill="#333" stroke="#222" stroke-width="0.5"/>
+  <text x="448" y="594" text-anchor="middle" font-size="7" fill="#555" font-family="sans-serif">TV (wall-mounted)</text>
+
+  <!-- Small desk/table (north area, near east) -->
+  <rect x="720" y="90" width="80" height="50" fill="none" stroke="#8b6914" stroke-width="1" rx="3" stroke-dasharray="6,3"/>
+  <text x="760" y="120" text-anchor="middle" font-size="8" fill="#8b6914" font-family="sans-serif">Desk</text>
+
+  <!-- Green side table -->
+  <circle cx="660" cy="510" r="20" fill="none" stroke="#2a8040" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="660" y="513" text-anchor="middle" font-size="7" fill="#2a8040" font-family="sans-serif">Table</text>
+
+  <!-- Floor Lamp -->
+  <circle cx="210" cy="265" r="8" fill="none" stroke="#8b6914" stroke-width="1"/>
+  <text x="210" y="268" text-anchor="middle" font-size="6" fill="#8b6914" font-family="sans-serif">L</text>
+  <text x="210" y="255" text-anchor="middle" font-size="7" fill="#8b6914" font-family="sans-serif">Lamp</text>
+
+  <!-- ============================================ -->
+  <!-- DIMENSION LINES                               -->
+  <!-- ============================================ -->
+
+  <!-- Overall width (top) - 19'6" -->
+  <line x1="90" y1="28" x2="870" y2="28" stroke="#c00" stroke-width="1" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)"/>
+  <text x="480" y="24" text-anchor="middle" font-size="12" fill="#c00" font-weight="bold" font-family="sans-serif">19'-6"</text>
+
+  <!-- Overall height (right side) - 14'8" -->
+  <line x1="920" y1="60" x2="920" y2="647" stroke="#c00" stroke-width="1" marker-start="url(#arrow-up)" marker-end="url(#arrow-down)"/>
+  <text x="942" y="358" text-anchor="middle" font-size="12" fill="#c00" font-weight="bold" font-family="sans-serif" writing-mode="tb">14'-8"</text>
+
+  <!-- Chimney projection depth -->
+  <line x1="350" y1="680" x2="350" y2="600" stroke="#c00" stroke-width="0.8" stroke-dasharray="3,2"/>
+  <line x1="350" y1="680" x2="350" y2="659" stroke="#c00" stroke-width="0.8"/>
+  <text x="335" y="692" text-anchor="middle" font-size="9" fill="#c00" font-family="sans-serif">14" projection</text>
+
+  <!-- West wall to chimney -->
+  <line x1="90" y1="672" x2="358" y2="672" stroke="#c00" stroke-width="0.8" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)"/>
+  <text x="224" y="686" text-anchor="middle" font-size="9" fill="#c00" font-family="sans-serif">6'-8"</text>
+
+  <!-- Chimney to east wall -->
+  <line x1="538" y1="672" x2="870" y2="672" stroke="#c00" stroke-width="0.8" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)"/>
+  <text x="704" y="686" text-anchor="middle" font-size="9" fill="#c00" font-family="sans-serif">8'-4"</text>
+
+  <!-- Window 1 position from west wall -->
+  <line x1="90" y1="38" x2="155" y2="38" stroke="#888" stroke-width="0.5" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)"/>
+  <text x="122" y="36" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">1'-8"</text>
+
+  <!-- Space between window 1 and french door -->
+  <line x1="275" y1="38" x2="420" y2="38" stroke="#888" stroke-width="0.5" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)"/>
+  <text x="347" y="36" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">3'-7"</text>
+
+  <!-- Space between french door and window 2 -->
+  <line x1="527" y1="38" x2="680" y2="38" stroke="#888" stroke-width="0.5" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)"/>
+  <text x="603" y="36" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">3'-10"</text>
+
+  <!-- Window 2 to east wall -->
+  <line x1="800" y1="38" x2="870" y2="38" stroke="#888" stroke-width="0.5" marker-start="url(#arrow-left)" marker-end="url(#arrow-right)"/>
+  <text x="835" y="36" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">1'-9"</text>
+
+  <!-- French double doors position on west wall (from north wall) -->
+  <line x1="60" y1="60" x2="60" y2="230" stroke="#888" stroke-width="0.5" marker-start="url(#arrow-up)" marker-end="url(#arrow-down)"/>
+  <text x="48" y="148" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif" writing-mode="tb">4'-3"</text>
+
+  <!-- French double doors height dimension -->
+  <line x1="60" y1="230" x2="60" y2="417" stroke="#4a86c8" stroke-width="0.5" marker-start="url(#arrow-up)" marker-end="url(#arrow-down)"/>
+  <text x="42" y="328" text-anchor="middle" font-size="8" fill="#4a86c8" font-family="sans-serif" writing-mode="tb">4'-8"</text>
+
+  <!-- East wall door position from north wall -->
+  <line x1="906" y1="60" x2="906" y2="140" stroke="#888" stroke-width="0.5" marker-start="url(#arrow-up)" marker-end="url(#arrow-down)"/>
+  <text x="918" y="103" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif" writing-mode="tb">2'-0"</text>
+
+  <!-- ============================================ -->
+  <!-- CEILING HEIGHT NOTATION                       -->
+  <!-- ============================================ -->
+  <rect x="700" y="420" width="140" height="45" fill="white" stroke="#aaa" stroke-width="0.5" rx="4" opacity="0.9"/>
+  <text x="770" y="436" text-anchor="middle" font-size="10" fill="#555" font-family="sans-serif" font-weight="bold">Ceiling Height</text>
+  <text x="770" y="452" text-anchor="middle" font-size="11" fill="#c00" font-family="sans-serif" font-weight="bold">~8'-0"</text>
+
+  <!-- ============================================ -->
+  <!-- COMPASS ROSE                                  -->
+  <!-- ============================================ -->
+  <g transform="translate(870, 720)">
+    <circle cx="0" cy="0" r="25" fill="white" stroke="#aaa" stroke-width="1"/>
+    <line x1="0" y1="-20" x2="0" y2="20" stroke="#666" stroke-width="1"/>
+    <line x1="-20" y1="0" x2="20" y2="0" stroke="#666" stroke-width="1"/>
+    <polygon points="0,-22 -5,-10 5,-10" fill="#c00"/>
+    <text x="0" y="-26" text-anchor="middle" font-size="10" fill="#c00" font-weight="bold" font-family="sans-serif">N</text>
+    <text x="0" y="34" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">S</text>
+    <text x="-30" y="4" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">W</text>
+    <text x="30" y="4" text-anchor="middle" font-size="8" fill="#888" font-family="sans-serif">E</text>
+  </g>
+
+  <!-- ============================================ -->
+  <!-- SCALE BAR                                     -->
+  <!-- ============================================ -->
+  <g transform="translate(100, 720)">
+    <text x="0" y="-5" font-size="9" fill="#555" font-family="sans-serif">Scale: 1 ft</text>
+    <rect x="0" y="0" width="40" height="6" fill="#333"/>
+    <rect x="40" y="0" width="40" height="6" fill="white" stroke="#333" stroke-width="0.5"/>
+    <rect x="80" y="0" width="40" height="6" fill="#333"/>
+    <rect x="120" y="0" width="40" height="6" fill="white" stroke="#333" stroke-width="0.5"/>
+    <text x="0" y="16" font-size="8" fill="#555" font-family="sans-serif">0'</text>
+    <text x="40" y="16" font-size="8" fill="#555" font-family="sans-serif">1'</text>
+    <text x="80" y="16" font-size="8" fill="#555" font-family="sans-serif">2'</text>
+    <text x="120" y="16" font-size="8" fill="#555" font-family="sans-serif">3'</text>
+    <text x="160" y="16" font-size="8" fill="#555" font-family="sans-serif">4'</text>
+  </g>
+
+</svg>
+</div>
+
+<div class="legend">
+  <h3>Measurement Summary</h3>
+  <table>
+    <tr><td>Room Dimensions</td><td>19'-6" x 14'-8" (approximately 286 sq ft)</td></tr>
+    <tr><td>Ceiling Height</td><td>~8'-0" (estimated from door frame proportions)</td></tr>
+    <tr><td>Fireplace Opening</td><td>3'-0" wide x 2'-6" tall</td></tr>
+    <tr><td>Chimney Breast</td><td>4'-6" wide, projects 14" from south wall</td></tr>
+    <tr><td>Mantel</td><td>5'-0" wide, ~4'-6" above finished floor</td></tr>
+    <tr><td>French Double Doors (West)</td><td>4'-8" wide (two 2'-4" leaves), 6'-8" tall</td></tr>
+    <tr><td>French Single Door (North)</td><td>2'-8" wide, 6'-8" tall, 10-pane glass</td></tr>
+    <tr><td>Paneled Door (South)</td><td>2'-6" wide, 6'-8" tall</td></tr>
+    <tr><td>Doorway (East)</td><td>2'-8" wide, 6'-8" tall</td></tr>
+    <tr><td>Window 1 (North-West)</td><td>3'-0" wide, sill at ~3'-0" AFF, head at ~6'-8" AFF</td></tr>
+    <tr><td>Window 2 (North-East)</td><td>3'-0" wide, sill at ~3'-0" AFF, head at ~6'-8" AFF</td></tr>
+    <tr><td>Hardwood Flooring</td><td>Oak strip, 2-1/4" wide boards, running east-west</td></tr>
+    <tr><td>Electrical Outlets</td><td>7 identified, standard height 12" AFF (duplex receptacles)</td></tr>
+    <tr><td>Baseboards</td><td>~4" tall, painted white, throughout room</td></tr>
+  </table>
+</div>
+
+<div class="notes">
+  <h3>Estimation Notes &amp; Methodology</h3>
+  <ul>
+    <li><strong>Primary references:</strong> Interior door frames (standard 6'-8" x 2'-8") used as the main scaling reference for all measurements.</li>
+    <li><strong>Secondary references:</strong> Oak hardwood floor boards (standard 2-1/4" width) used to cross-check horizontal distances.</li>
+    <li><strong>Tertiary references:</strong> Standard electrical outlet height (12" AFF), window proportions, and fireplace mantel dimensions.</li>
+    <li><strong>Camera height:</strong> All photos taken at approximately 5 ft from floor level, consistent with stated conditions.</li>
+    <li><strong>Accuracy:</strong> Estimated &plusmn;6" on room dimensions, &plusmn;2" on door/window widths. Perspective distortion from wide-angle phone cameras may affect measurements.</li>
+    <li><strong>Chimney breast:</strong> Clearly visible projection from south wall with blue painter's tape at ceiling line. TV mounted on chimney face.</li>
+    <li><strong>Orientation:</strong> "North" assigned to the window wall for reference; actual compass orientation unknown from photos.</li>
+    <li><strong>Outlets:</strong> Positions are approximate - some may be obscured by furniture. Only outlets visible in photos are shown.</li>
+  </ul>
+</div>
+
+</body>
+</html>
